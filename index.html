@@ -3,6 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- First-paint sizing: prevent the large embedded POD logo from flashing at its intrinsic resolution. -->
+  <style id="baro-first-paint-logo-stability">
+    #baroWelcome .bw-brand-lockup .official-pod-lockup,
+    #studioWizard .pod-studio-lockup .official-pod-lockup {
+      display:block;
+      flex:0 0 auto;
+      width:160px;
+      max-width:160px;
+      max-height:38px;
+      height:auto;
+      object-fit:contain;
+    }
+    @media (max-width:580px) {
+      #baroWelcome .bw-brand-lockup .official-pod-lockup,
+      #studioWizard .pod-studio-lockup .official-pod-lockup {
+        width:123px;
+        max-width:123px;
+        max-height:34px;
+      }
+    }
+  </style>
+
   <meta name="baro-pod-build" content="studio-v3.83-white-right-rounded-workspace" />
   <title>v3.83 · 바로출판POD 제작 스튜디오 · 화이트 도우미와 라운드 작업공간</title>
   <style>
