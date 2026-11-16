@@ -3,6 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- First-paint pagination stability: hide uninitialized n/n counters before the main stylesheet loads. -->
+  <style id="baro-first-paint-pagination-stability">
+    [data-page-counter]:not(.is-ready),
+    .page-counter:not(.is-ready),
+    .pagination-counter:not(.is-ready),
+    .page-indicator:not(.is-ready),
+    .preview-page-count:not(.is-ready),
+    .preview-pagination .counter:not(.is-ready) {
+      visibility: hidden !important;
+    }
+  </style>
   <!-- First-paint sizing: prevent the large embedded POD logo from flashing at its intrinsic resolution. -->
   <style id="baro-first-paint-logo-stability">
     #baroWelcome .bw-brand-lockup .official-pod-lockup,
@@ -26,7 +37,7 @@
   </style>
 
   <meta name="baro-pod-build" content="studio-v3.83-white-right-rounded-workspace" />
-  <title>v3.83 · 바로출판POD 제작 스튜디오 · 화이트 도우미와 라운드 작업공간</title>
+  <title>바로출판POD 제작 스튜디오</title>
   <style>
     :root{
       --bg:#f4f6f8; --panel:#fff; --line:#e5e8eb; --text:#191f28;
