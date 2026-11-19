@@ -32,19 +32,17 @@ body:not(.stage-production-complete) #kyoboGuideBrandFooter {
 
 <!-- Prevent uninitialized internal preview counters or legacy panels flashing before Welcome mounts. -->
 <style id="baro-welcome-first-paint-gate">
+/* Keep uninitialized UI offscreen without introducing a second title screen.
+   The completed Welcome is revealed atomically by baro-cover-atomic-release. */
 html:not(.baro-initial-ui-ready) body { visibility:hidden!important; }
+html:not(.baro-initial-ui-ready)::before {
+  content:"";
+  position:fixed;inset:0;z-index:2147483647;
+  display:block;
+  background:#f7f8fb;
+}
 </style>
-<script id="baro-welcome-first-paint-release">
-(function(){
-  function reveal(){
-    // Reveal only after the complete HTML, including the late legacy styles, is parsed.
-    document.documentElement.classList.add('baro-initial-ui-ready');
-  }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function(){ requestAnimationFrame(reveal); }, {once:true});
-  } else { requestAnimationFrame(reveal); }
-})();
-</script>
+<!-- The welcome screen and book graphic are released together in the late initialization script. -->
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -17727,7 +17725,97 @@ body .inner-flow-page .copyright-safe-holder .copyright-bottom-sample .copyright
 }
 </style>
 
+<style id="v59-font-checkpoint-guidance">
+/* 3차 반응형 정비 전 소규모 개선: 기존 제작 화면 레이아웃과 버튼 크기는 유지 */
+#resultPanel.guide-only-mode .font-check-help-action{margin-top:10px!important;}
+#resultPanel.guide-only-mode .font-check-help-action a{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;
+  min-height:40px!important;padding:9px 12px!important;box-sizing:border-box!important;
+  border:1px solid #d6d9ef!important;border-radius:10px!important;
+  background:#fff!important;color:#4b4f8f!important;
+  font-family:inherit!important;font-size:14px!important;font-weight:700!important;line-height:1.45!important;
+  text-decoration:none!important;word-break:keep-all!important;
+}
+#resultPanel.guide-only-mode .font-check-help-action a:hover,
+#resultPanel.guide-only-mode .font-check-help-action a:focus-visible{
+  background:#f4f3fc!important;border-color:#8583be!important;outline-offset:2px;
+}
+</style>
 
+<style id="v60-inner-font-help-center">
+/* 제작 가이드의 책 도면 밖에 배치. 기존 치수/확대/검수 로직은 변경하지 않음. */
+.canvas-card #innerFontHelpStrip{display:none!important;}
+body.inner-mode .canvas-card #innerFontHelpStrip{
+  display:flex!important;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  gap:10px 16px;min-width:0;box-sizing:border-box;
+  margin:10px 16px 12px;padding:13px 15px;
+  background:#f7f8fb;border:1px solid #e6e8f0;border-radius:12px;
+  font-family:inherit;color:#191f28;
+}
+#innerFontHelpStrip .inner-font-help-copy{display:flex;flex:1 1 275px;flex-direction:column;gap:4px;min-width:0;word-break:keep-all;}
+#innerFontHelpStrip .inner-font-help-copy strong{font-size:15px!important;line-height:1.45!important;font-weight:700!important;color:#252d43!important;}
+#innerFontHelpStrip .inner-font-help-copy span{font-size:14px!important;line-height:1.5!important;font-weight:400!important;color:#596579!important;}
+#innerFontHelpStrip .inner-font-help-link{
+  box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  min-height:42px;padding:9px 14px;border-radius:10px;
+  border:1px solid #d4d7eb;background:#fff;color:#4b4f8f;
+  font-family:inherit;font-size:14px!important;font-weight:700!important;line-height:1.3!important;
+  text-decoration:none;white-space:nowrap;flex:0 0 auto;
+}
+#innerFontHelpStrip .inner-font-help-link:hover{background:#f2f2fc;border-color:#a2a4cc;}
+#innerFontHelpStrip .inner-font-help-link:focus-visible{outline:2px solid #4b4f8f;outline-offset:2px;}
+@media(max-width:560px){
+  body.inner-mode .canvas-card #innerFontHelpStrip{margin:9px 10px 11px;padding:12px;gap:9px;}
+  #innerFontHelpStrip .inner-font-help-link{width:100%;white-space:normal;}
+}
+body.preview-fullscreen-active .canvas-card #innerFontHelpStrip,
+.workspace.fullscreen-preview .canvas-card #innerFontHelpStrip{display:none!important;}
+</style>
+<style id="v61-inline-font-help">
+/* Small but discoverable help beside the actual inner-template CTA; avoid extra vertical cards. */
+#v61InnerFontHelpLink{display:none!important;}
+body.stage-production-complete.inner-mode:not(.studio-wizard-active):not(.preview-fullscreen-active) #v379GuideDownloadRow #v61InnerFontHelpLink{
+  display:inline-flex!important;align-items:center!important;gap:7px!important;
+  min-height:40px!important;padding:5px 1px!important;
+  color:#4B4F8F!important;font-size:15px!important;line-height:1.45!important;
+  font-weight:750!important;text-decoration:none!important;white-space:normal!important;
+  word-break:keep-all!important;box-sizing:border-box!important;
+}
+#v61InnerFontHelpLink .v61-font-help-mark{
+  flex:0 0 20px;display:inline-flex;align-items:center;justify-content:center;
+  width:20px;height:20px;border-radius:50%;background:#FFF2D8;color:#885600;
+  font-size:13px;font-weight:850;line-height:1;
+}
+#v61InnerFontHelpLink .v61-font-help-external{font-size:12px;opacity:.75;}
+body.stage-production-complete.inner-mode #v379GuideDownloadRow #v61InnerFontHelpLink:hover{color:#34386B!important;text-decoration:underline!important;text-underline-offset:3px!important;}
+body.stage-production-complete.inner-mode #v379GuideDownloadRow #v61InnerFontHelpLink:focus-visible{outline:2px solid #4B4F8F!important;outline-offset:4px!important;border-radius:3px;}
+@media(max-width:850px){
+  body.stage-production-complete.inner-mode #v379GuideDownloadRow .v379-helper-links{flex:1 1 100%!important;}
+  body.stage-production-complete.inner-mode #v379GuideDownloadRow #v61InnerFontHelpLink{font-size:15px!important;}
+}
+</style>
+
+<style id="baro-v62-guide-stability-and-labels">
+/* Guide mode: prevent one-frame intermediate geometry from flashing. */
+.canvas-card.baro-v62-guide-switching #schematic,
+.canvas-card.baro-v62-guide-switching #filePreview{visibility:hidden!important;}
+/* Copyright help is a toolbar action, not a printed-page annotation. */
+.canvas-title-main #baroCopyrightToolbarBtn{
+  position:static!important;left:auto!important;right:auto!important;top:auto!important;
+  margin-left:12px;z-index:auto;flex:0 0 auto;
+  font-size:12px!important;font-weight:650!important;
+  padding:6px 10px!important;white-space:nowrap;
+}
+.canvas-title-main #baroCopyrightToolbarBtn[hidden]{display:none!important;}
+/* Keep guide labels within the actual page, not over adjacent page navigation. */
+.inner-flow-page .edge-margin-tag,
+.inner-flow-page .inner-edge-tag{max-width:100%;box-sizing:border-box;}
+.inner-flow-page .page-position-badge{max-width:calc(100% - 12px);box-sizing:border-box;}
+@media(max-width:700px){
+  .canvas-title-main #baroCopyrightToolbarBtn{font-size:11px!important;margin-left:6px;}
+}
+</style>
+<!-- v65: stabilize inner-to-cover guide switch; remove competing delayed geometry passes -->
 
 
 </head>
@@ -18366,7 +18454,7 @@ body .inner-flow-page .copyright-safe-holder .copyright-bottom-sample .copyright
           <span class="expert-design-question">표지·내지 디자인을 전문가에게 맡기고 싶다면?</span>
           <span class="expert-design-sub">디자인 전문 제휴 서비스 보기</span>
         </span>
-        <span class="expert-design-arrow" aria-hidden="true">→</span>
+
       </a>
     </div>
 
@@ -25238,35 +25326,70 @@ function renderInnerSpreadGuide(){
     schematic.style.removeProperty("transform");
   }
 
+  // v62: preserve scroll position and avoid revealing intermediate measurements.
+  let guideSwitchToken=0;
+  let guideSwitchTimer=0;
   function switchMode(mode){
     if(mode!=="cover" && mode!=="inner") return;
-
-    state.mode=mode;
-    state.displayedFile=null;
-    state.zoom=1;
-    state.previewOffsetX=0;
-    state.previewOffsetY=0;
-
-    if(mode==="cover"){
-      const area=document.getElementById("canvasArea");
-      if(area) delete area.dataset.baroInnerSeen;
-      restoreCoverStructure();
-    }else{
-      document.body.classList.add("mvp-inner-guide");
-      if(typeof innerGuideViewIndex!=="undefined") innerGuideViewIndex=0;
-    }
-
-    if(typeof syncModeUI==="function") syncModeUI();
-    if(typeof renderSchematic==="function") renderSchematic();
-    if(typeof renderInitialResult==="function") renderInitialResult();
-    if(typeof updateContextualBottomAction==="function") updateContextualBottomAction();
-
-    const zoomLabel=document.getElementById("zoomLabel");
-    if(zoomLabel) zoomLabel.textContent="100%";
-    const canvas=document.getElementById("canvasArea");
-    if(canvas){
-      canvas.scrollLeft=0;
-      canvas.scrollTop=0;
+    if(state.mode===mode) return;
+    const token=++guideSwitchToken;
+    const canvasCard=document.querySelector('.canvas-card');
+    const canvas=document.getElementById('canvasArea');
+    const priorScroll={left:canvas?.scrollLeft||0,top:canvas?.scrollTop||0};
+    canvasCard?.classList.add('baro-v62-guide-switching');
+    window.BARO_GUIDE_SWITCH_ACTIVE=true;
+    clearTimeout(guideSwitchTimer);
+    try{
+      state.mode=mode;
+      state.displayedFile=null;
+      state.zoom=1;
+      state.previewOffsetX=0;
+      state.previewOffsetY=0;
+      if(mode==="cover"){
+        if(canvas) delete canvas.dataset.baroInnerSeen;
+        restoreCoverStructure();
+      }else{
+        document.body.classList.add('mvp-inner-guide');
+        if(typeof innerGuideViewIndex!=="undefined") innerGuideViewIndex=0;
+      }
+      if(typeof syncModeUI==="function") syncModeUI();
+      if(typeof renderSchematic==="function") renderSchematic();
+      if(typeof renderInitialResult==="function") renderInitialResult();
+      if(typeof updateContextualBottomAction==="function") updateContextualBottomAction();
+      if(canvas){canvas.scrollLeft=0;canvas.scrollTop=0;}
+      // Allow layout to settle before the new guide is shown.
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{
+        if(token!==guideSwitchToken) return;
+        if(mode==="inner") window.BARO_INNER_VIEW?.invalidate?.();
+        if(mode==="inner") window.BARO_INNER_VIEW?.apply?.(false);
+        // The unified view controller owns cover sizing. Apply it once *before*
+        // exposing the result, instead of competing with the geometry guard.
+        if(mode==="cover") {
+          // Restore the proven cover geometry guard before showing the canvas.
+          // v65 accidentally disabled this guard, leaving the cover at thumbnail size.
+          window.BARO_COVER_GEOMETRY_QA?.sync?.(true);
+        }
+        const label=document.getElementById('zoomLabel');
+        if(label) label.textContent='100%';
+        requestAnimationFrame(()=>{
+          if(token!==guideSwitchToken) return;
+          window.BARO_GUIDE_SWITCH_ACTIVE=false;
+          if(mode==="cover") window.BARO_COVER_GEOMETRY_QA?.sync?.(true);
+          canvasCard?.classList.remove('baro-v62-guide-switching');
+        });
+      }));
+      // Safety release: if fonts/images or a browser quirk delays frames, don't leave a blank guide.
+      guideSwitchTimer=setTimeout(()=>{
+        if(token===guideSwitchToken){
+          window.BARO_GUIDE_SWITCH_ACTIVE=false;
+          canvasCard?.classList.remove('baro-v62-guide-switching');
+        }
+      },360);
+    }catch(error){
+      if(canvas){canvas.scrollLeft=priorScroll.left;canvas.scrollTop=priorScroll.top;}
+      window.BARO_GUIDE_SWITCH_ACTIVE=false;
+      canvasCard?.classList.remove('baro-v62-guide-switching');
+      console.error('가이드 전환 중 오류',error);
     }
   }
 
@@ -25399,7 +25522,7 @@ function renderInnerSpreadGuide(){
   };
   if(fullscreenBtn)fullscreenBtn.onclick=async()=>{if(typeof enterFullscreenPreview==="function")await enterFullscreenPreview();if(isInnerGuide()){await new Promise(r=>setTimeout(r,120));applyInnerGuideLayout({center:true});}};
   if(fullscreenExit)fullscreenExit.onclick=async()=>{if(typeof exitFullscreenPreview==="function")await exitFullscreenPreview();if(isInnerGuide()){await new Promise(r=>setTimeout(r,120));applyInnerGuideLayout({center:true});}};
-  document.addEventListener("click",e=>{if(!e.target.closest)return;if(e.target.closest("button[data-mode='inner']")){innerZoom=1;stableFit=null;requestAnimationFrame(()=>applyInnerGuideLayout({center:true}));}else if(e.target.closest(".format-card")||e.target.closest("#sidebarCollapseBtn")||e.target.closest("#sidebarRestoreBtn")){stableFit=null;setTimeout(()=>applyInnerGuideLayout({center:false}),220);}});
+  document.addEventListener("click",e=>{if(!e.target.closest)return;if(e.target.closest("button[data-mode='inner']")){innerZoom=1;stableFit=null;/* v62: guide switch owns initial fit */}else if(e.target.closest(".format-card")||e.target.closest("#sidebarCollapseBtn")||e.target.closest("#sidebarRestoreBtn")){stableFit=null;setTimeout(()=>applyInnerGuideLayout({center:false}),220);}});
   let resizeTimer=0;window.addEventListener("resize",()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>applyInnerGuideLayout({center:false}),100);});
   const area=byId("canvasArea");if(area&&window.ResizeObserver)new ResizeObserver(()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>applyInnerGuideLayout({center:false}),100);}).observe(area);
   // One owner of inner spread sizing. No other controller may resize pages.
@@ -25623,8 +25746,7 @@ function renderInnerSpreadGuide(){
     if(!e.target.closest) return;
     if(e.target.closest(".format-card") ||
        e.target.closest(".binding-card") ||
-       e.target.closest(".paper-card") ||
-       e.target.closest("button[data-mode='cover']")){
+       e.target.closest(".paper-card")){
       resetAndSchedule(110);
       return;
     }
@@ -26692,6 +26814,37 @@ function renderInnerSpreadGuide(){
 #copyrightReadableOverlay .copyright-sample-note{font-size:14px!important;line-height:1.75!important;margin:22px 0 0!important;white-space:normal!important;color:#2c3444!important}
 @media(max-width:520px){#copyrightReadableOverlay .readable-dialog{padding:18px}#copyrightReadableOverlay .copyright-grid{grid-template-columns:77px minmax(0,1fr)!important;gap:8px!important}}
 </style>
+
+<style id="baro-v63-copyright-page-action">
+/* Contextual copyright preview action; anchored to page 2, never toolbar. */
+.canvas-title-main #baroCopyrightToolbarBtn{display:none!important}
+#schematic .inner-flow-page{position:relative}
+#schematic .inner-flow-page > .baro-copyright-page-action{
+  position:absolute!important;top:10px!important;right:10px!important;
+  left:auto!important;bottom:auto!important;z-index:24!important;
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  gap:5px;padding:6px 9px!important;margin:0!important;
+  min-height:29px;box-sizing:border-box;
+  border:1px solid #cfd8f0!important;border-radius:8px!important;
+  background:rgba(255,255,255,.97)!important;color:#4b4f8f!important;
+  font-size:11px!important;font-weight:700!important;line-height:1.25!important;
+  white-space:nowrap;box-shadow:0 1px 4px rgba(27,38,76,.08)!important;
+  cursor:pointer!important;
+}
+#schematic .inner-flow-page > .baro-copyright-page-action:hover,
+#schematic .inner-flow-page > .baro-copyright-page-action:focus-visible{
+  background:#f0f1ff!important;outline:2px solid #4b4f8f;outline-offset:2px;
+}
+#schematic .inner-flow-page > .baro-copyright-page-action span{
+  font-size:14px;line-height:1;pointer-events:none;
+}
+@media(max-width:700px){
+  #schematic .inner-flow-page > .baro-copyright-page-action{
+    top:6px!important;right:6px!important;min-height:28px;
+    padding:5px 7px!important;font-size:10px!important;
+  }
+}
+</style>
 <script id="v243-action-copyright-usability-js">
 (function(){
   let lastFocus=null;
@@ -26706,23 +26859,37 @@ function renderInnerSpreadGuide(){
   document.addEventListener('click',e=>{
     const trigger=e.target.closest('.copyright-preview-large-trigger');if(!trigger)return;
     e.preventDefault();e.stopPropagation();
-    const sample=trigger.closest('.inner-flow-page')?.querySelector('.copyright-bottom-sample');if(!sample)return;
+    const sample=trigger.closest('.inner-flow-page')?.querySelector('.copyright-bottom-sample') || document.querySelector('#schematic .inner-flow-page .copyright-bottom-sample');if(!sample)return;
     lastFocus=trigger;
     document.getElementById('copyrightReadableContent').innerHTML=sample.innerHTML;
     overlay.hidden=false;document.getElementById('copyrightReadableClose').focus();
   },true);
   function attach(){
-    document.querySelectorAll('.inner-flow-page .copyright-bottom-sample').forEach(sample=>{
-      const host=sample.closest('.inner-flow-page');
-      if(!host||host.querySelector('.copyright-preview-large-trigger'))return;
-      if(getComputedStyle(host).position==='static')host.style.position='relative';
-      const b=document.createElement('button');b.type='button';b.className='copyright-preview-large-trigger';b.textContent='판권 크게 보기 ⤢';b.setAttribute('aria-label','판권 페이지 크게 보기');host.appendChild(b);
+    // Contextual action: the copyright preview exists on inner page 2 only.
+    // Attach to that actual page, so guide resizing and fullscreen keep its anchor.
+    document.getElementById('baroCopyrightToolbarBtn')?.remove();
+    const pages=document.querySelectorAll('#schematic .inner-flow-page');
+    pages.forEach(page=>{
+      const sample=page.querySelector('.copyright-bottom-sample');
+      const existing=page.querySelector('.copyright-preview-large-trigger');
+      if(!sample){ existing?.remove(); return; }
+      if(existing) return;
+      const button=document.createElement('button');
+      button.type='button';
+      button.className='copyright-preview-large-trigger baro-copyright-page-action';
+      button.innerHTML='<span aria-hidden="true">⤢</span> 판권 확대';
+      button.setAttribute('aria-label','판권 페이지 확대 보기');
+      button.title='판권 페이지 확대 보기';
+      page.appendChild(button);
     });
   }
+
   let queued=false;
   const obs=new MutationObserver(()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;attach();});});
-  const root=document.getElementById('innerSpreadStage')||document.body;
-  obs.observe(root,{childList:true,subtree:true});attach();
+  const root=document.getElementById('schematic')||document.body;
+  obs.observe(root,{childList:true,subtree:true});
+  document.querySelectorAll('.mode-tabs button[data-mode]').forEach(el=>el.addEventListener('click',()=>requestAnimationFrame(attach)));
+  attach();
 })();
 </script>
 
@@ -27604,7 +27771,7 @@ const paperSummary=step===2?'<span class="sw-paper-detail">'+esc(title.replace(/
    '<div class="sw-gallery-caption"><strong>'+esc(title)+'</strong>'+detail+'</div></div>';
  }
  return '<button class="sw-card '+(isChosen?'selected':'')+'" '+(b.disabled?'disabled':'')+' type="button" data-choose="'+i+'"'+a11yLabel+'>'+choiceMarker+visual+formatGraphic+paperPhoto+'<strong>'+esc(title)+'</strong>'+detail+disabledHint+structure+'</button>';}).join('')+'</div>';
-  if(step===1){$('swChoices').innerHTML += '<p class="sw-format-use-note">추천 용도는 대표적인 활용 예시이며, 해당 판형으로 제작할 수 있는 도서 종류를 제한하지 않습니다.</p>';
+  if(step===1){$('swChoices').innerHTML += '<p class="sw-format-use-note">※ 추천 용도는 대표적인 활용 예시이며, 해당 판형으로 제작할 수 있는 도서 종류를 제한하지 않습니다.</p>';
     $('swChoices').innerHTML += '<div class="v354-step2-template v355-template-cta"><div class="v355-cta-icon" aria-hidden="true">▤</div><div class="v355-cta-copy"><strong>책 크기에 맞춰 원고를 편집해 보세요</strong><p>선택한 판형의 내지 템플릿으로 원고를 편집하고 정확한 페이지 수를 확인할 수 있어요.</p></div><button type="button" id="v354Step2Toggle" aria-haspopup="dialog" aria-controls="v355TemplateModal">내지 템플릿 선택하기</button></div>';
   }
   if(step===2){
@@ -30955,6 +31122,80 @@ body.stage-production-complete:not(.studio-wizard-active) .workspace .canvas-car
 }
 </style>
 
+
+<!-- v64: fullscreen reading mode; contextual copyright zoom is only useful in normal preview. -->
+<style id="baro-v64-fullscreen-reading-cleanup">
+/* Normal guide: retain page-attached action. Fullscreen: enlarged spread replaces that action. */
+body.preview-fullscreen-active #schematic .inner-flow-page > .baro-copyright-page-action,
+.workspace.fullscreen-preview #schematic .inner-flow-page > .baro-copyright-page-action {
+  display:none!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+}
+/* Preserve a non-overlapping content viewport when the fullscreen top and footer bars are present. */
+body.mvp-inner-guide.stage-production-complete.preview-fullscreen-active .workspace.fullscreen-preview #canvasArea.book-mode {
+  box-sizing:border-box!important;
+  scroll-behavior:auto!important;
+  scroll-padding-top:0!important;
+  overscroll-behavior:contain;
+}
+/* Prevent the book's top edge being cut by flex centering when its calculated size exceeds the viewport. */
+body.mvp-inner-guide.stage-production-complete.preview-fullscreen-active #canvasArea.book-mode #schematic {
+  flex-shrink:0!important;
+}
+</style>
+<script id="baro-v64-fullscreen-entry-fit">
+(function(){
+  'use strict';
+  const isFull=()=>document.body.classList.contains('preview-fullscreen-active');
+  const isInnerGuide=()=>document.body.classList.contains('mvp-inner-guide') &&
+    typeof state!=='undefined' && state.mode==='inner' && !state.innerInfo;
+  let pending=0;
+  function fitOnceWhenReady(){
+    const stamp=++pending;
+    // The fullscreen shell changes geometry across animation frames; run after it settles.
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      if(stamp!==pending || !isFull() || !isInnerGuide())return;
+      try{
+        if(window.BARO_INNER_VIEW && typeof window.BARO_INNER_VIEW.fit==='function'){
+          window.BARO_INNER_VIEW.fit();
+        }
+        const area=document.getElementById('canvasArea');
+        if(area)area.scrollTo({top:0,left:0,behavior:'instant'});
+      }catch(error){console.warn('전체화면 초기 맞춤 보정 실패',error);}
+    }));
+  }
+  document.getElementById('fullscreenBtn')?.addEventListener('click',()=>{
+    // Existing fullscreen handler stays the owner of transition; correct once after transition.
+    setTimeout(fitOnceWhenReady,260);
+  });
+  // Escape and the exit button must cancel a pending fullscreen refit.
+  document.getElementById('fullscreenExitBtn')?.addEventListener('click',()=>{pending++;});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')pending++;});
+})();
+</script>
+<style id="baro-v67-binding-hover-stability">
+/* Step 01: keep the book-photo cards stationary on hover/focus.
+   The selected border remains the only persistent selection cue. */
+#studioWizard.sw-binding-step .sw-gallery-item .sw-card.sw-gallery-photo,
+#studioWizard.sw-binding-step .sw-gallery-item .sw-card.sw-gallery-photo:hover:not(:disabled),
+#studioWizard.sw-binding-step .sw-gallery-item .sw-card.sw-gallery-photo.selected:hover:not(:disabled) {
+  transform:none!important;
+  transition:border-color .16s ease!important;
+  box-shadow:none!important;
+}
+#studioWizard.sw-binding-step .sw-gallery-item .sw-card.sw-gallery-photo:hover:not(:disabled) {
+  border-color:#B5B8D7!important;
+}
+#studioWizard.sw-binding-step .sw-gallery-item .sw-card.sw-gallery-photo.selected,
+#studioWizard.sw-binding-step .sw-gallery-item .sw-card.sw-gallery-photo.selected:hover:not(:disabled) {
+  border-color:#4B4F8F!important;
+}
+#studioWizard.sw-binding-step .sw-gallery-item .sw-card.sw-gallery-photo .sw-visual.sw-photo-v10 img,
+#studioWizard.sw-binding-step .sw-gallery-item .sw-card.sw-gallery-photo:hover .sw-visual.sw-photo-v10 img {
+  transform:none!important;
+}
+</style>
 </body>
 </html>
 <style id="v357-step3-unify-and-secondary-download">
@@ -31382,6 +31623,14 @@ body.stage-production-complete:not(.studio-wizard-active) #specPanel .stage-page
     row.appendChild(helpers);
     toolbar.insertAdjacentElement('afterend',row);
     if(edge) helpers.appendChild(edge);
+    const fontHelp=document.createElement('a');
+    fontHelp.id='v61InnerFontHelpLink';
+    fontHelp.href='https://accidental-thought-b51.notion.site/2a77fd9fbff48132b643f9476815b9a2';
+    fontHelp.target='_blank';
+    fontHelp.rel='noopener noreferrer';
+    fontHelp.setAttribute('aria-label','PDF 글꼴 오류 예방 및 확인 방법, 새 창에서 열기');
+    fontHelp.innerHTML='<span class="v61-font-help-mark" aria-hidden="true">!</span><span>글꼴 오류 예방 · 확인 방법</span><span class="v61-font-help-external" aria-hidden="true">↗</span>';
+    helpers.appendChild(fontHelp);
     row.appendChild(action); // Move the real button; preserve its original download listener.
   }
   const sync=()=>{
@@ -32338,7 +32587,8 @@ body.stage-production-complete .mode-help-actions a{min-height:44px!important;fo
     revealed = true;
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
-        document.documentElement.classList.add('baro-cover-ready');
+        // Atomic first paint: copy, book art, buttons and layout appear on the same frame.
+        document.documentElement.classList.add('baro-cover-ready', 'baro-initial-ui-ready');
       });
     });
   }
@@ -32347,7 +32597,7 @@ body.stage-production-complete .mode-help-actions a{min-height:44px!important;fo
       // A rejected or delayed font must never leave the book hidden.
       Promise.race([
         document.fonts.ready.catch(function () {}),
-        new Promise(function (resolve) { setTimeout(resolve, 900); })
+        new Promise(function (resolve) { setTimeout(resolve, 1100); })
       ]).then(reveal, reveal);
     } else { reveal(); }
   }
@@ -33028,10 +33278,13 @@ body.stage-production-complete .mode-help-actions a{min-height:44px!important;fo
 #studioWizard.sw-stage-paper .partial-color-intro-copy{
   gap:5px!important;
 }
-#studioWizard.sw-stage-paper .partial-color-intro-copy strong{
-  font-size:17px!important;
-  line-height:1.4!important;
-  font-weight:700!important;
+/* Match the full, more-specific v36 rule that previously forced 20px.
+   The step 03 helper stays readable, but subordinate to actual section headings. */
+#studioWizard.sw-stage-paper .partial-color-guide > summary .partial-color-intro-copy strong,
+#specStepPaper .partial-color-guide > summary .partial-color-intro-copy strong{
+  font-size:16px!important;
+  line-height:1.45!important;
+  font-weight:650!important;
 }
 #studioWizard.sw-stage-paper .partial-color-intro-copy small{
   font-size:14px!important;
@@ -33668,13 +33921,14 @@ body.stage-production-complete:not(.studio-wizard-active) .inner-template-cta {
     if(!a||!d||!document.body.classList.contains('stage-production-complete'))return false;
     if(document.body.classList.contains('studio-wizard-active'))return false;
     if(typeof state==='undefined'||state.mode!=='cover'||state.coverInfo)return false;
+    // The unified preview controller is the single owner of guide geometry.
     if(a.clientWidth<160||a.clientHeight<140)return false;
     if(a.classList.contains('uploaded-preview'))return false;
     if(getComputedStyle(d).display==='none')return false;
     return true;
   };
   function sync(force=false){
-    if(busy||!coverReady()||typeof specs!=='function')return;
+    if(busy||(!force&&window.BARO_GUIDE_SWITCH_ACTIVE)||!coverReady()||typeof specs!=='function')return;
     const a=$('canvasArea'),d=$('schematic');
     const spec=specs();
     const cw=Number(spec?.cover?.w),ch=Number(spec?.cover?.h);
@@ -33706,9 +33960,16 @@ body.stage-production-complete:not(.studio-wizard-active) .inner-template-cta {
       d.dataset.baroGeometry=`${Math.round(w)}×${Math.round(h)}`;
     }finally{busy=false;}
   }
-  const schedule=()=>{requestAnimationFrame(()=>sync());setTimeout(()=>sync(),240);setTimeout(()=>sync(),700);};
+  // Only one geometry update per actual size change. Mode switches are settled
+  // by switchMode(), avoiding delayed competing resize writes after it paints.
+  let geometryFrame=0;
+  const schedule=()=>{
+    if(window.BARO_GUIDE_SWITCH_ACTIVE) return;
+    if(geometryFrame) cancelAnimationFrame(geometryFrame);
+    geometryFrame=requestAnimationFrame(()=>{geometryFrame=0;sync();});
+  };
   document.addEventListener('click',e=>{
-    if(e.target.closest('[data-mode],#fitHeightBtn,#zoomOut,#zoomIn,#zoomReset,#expandPreviewBtn,#fullscreenBtn,#fullscreenExitBtn,#sidebarCollapseBtn,#sidebarRestoreBtn,#v343Return,[data-studio-reselect]'))schedule();
+    if(e.target.closest('#fitHeightBtn,#zoomOut,#zoomIn,#zoomReset,#expandPreviewBtn,#fullscreenBtn,#fullscreenExitBtn,#sidebarCollapseBtn,#sidebarRestoreBtn,#v343Return,[data-studio-reselect]'))schedule();
   },true);
   window.addEventListener('resize',schedule,{passive:true});
   window.addEventListener('baro:production-ready',schedule);
@@ -33716,8 +33977,8 @@ body.stage-production-complete:not(.studio-wizard-active) .inner-template-cta {
   if(window.ResizeObserver){
     const area=$('canvasArea');if(area)new ResizeObserver(schedule).observe(area);
   }
-  // Late legacy callbacks may rewrite dimensions even without a resize.
-  setInterval(()=>sync(),900);
+  // No periodic 900ms dimension rewrite: it visibly shifted the cover after a mode switch.
+  // Real canvas/window size changes remain observed above.
   document.addEventListener('DOMContentLoaded',schedule,{once:true});
   schedule();
   window.BARO_COVER_GEOMETRY_QA={sync,report:()=>{
@@ -35226,5 +35487,103 @@ body.stage-production-complete:not(.studio-wizard-active) .workspace .canvas-car
 @media(max-width:1450px){
  body.stage-production-complete:not(.studio-wizard-active) .workspace .canvas-card .canvas-toolbar .zoom{gap:6px!important;}
  body.stage-production-complete:not(.studio-wizard-active) .workspace .canvas-card .canvas-toolbar .zoom .preview-view-btn{padding:0 5px!important;}
+}
+</style>
+
+<style id="baro-v54-step03-spacing-final">
+/* Step 03: use whitespace rather than borders to distinguish printing and paper. */
+#studioWizard.sw-stage-paper #swChoices > .sw-paper-list-heading-v321:not(.sw-print-list-heading-v357){
+  border:0!important;border-top:0!important;box-shadow:none!important;
+  padding:0!important;
+  margin-top:36px!important;margin-bottom:16px!important;
+}
+/* Keep the partial-color help visibly subordinate to the actual print-mode cards. */
+#studioWizard.sw-stage-paper #swChoices .partial-color-guide:not([open]) > summary{
+  min-height:0!important;
+  padding:11px 16px!important;
+}
+#studioWizard.sw-stage-paper #swChoices .partial-color-guide:not([open]){
+  padding:0!important;
+}
+/* An expanded help panel should remain comfortable to read and operate. */
+#studioWizard.sw-stage-paper #swChoices .partial-color-guide[open] > summary{
+  padding:13px 16px!important;
+}
+@media(max-width:650px){
+  #studioWizard.sw-stage-paper #swChoices > .sw-paper-list-heading-v321:not(.sw-print-list-heading-v357){
+    margin-top:30px!important;margin-bottom:14px!important;
+  }
+  #studioWizard.sw-stage-paper #swChoices .partial-color-guide:not([open]) > summary{
+    padding:12px!important;
+  }
+}
+</style>
+
+
+<style id="baro-v58-partial-color-step-hierarchy">
+/* Keep 2nd-release legibility while making step labels more prominent than instructions. */
+#studioWizard.sw-stage-paper #swChoices .partial-color-guide .partial-color-process-step b,
+#specStepPaper .partial-color-guide .partial-color-process-step b{
+  display:block!important;
+  font-size:16px!important;
+  line-height:1.45!important;
+  font-weight:700!important;
+  color:#293154!important;
+}
+#studioWizard.sw-stage-paper #swChoices .partial-color-guide .partial-color-process-step strong,
+#specStepPaper .partial-color-guide .partial-color-process-step strong{
+  display:block!important;
+  font-size:15px!important;
+  line-height:1.55!important;
+  font-weight:450!important;
+  color:#526078!important;
+}
+/* Usage examples are guidance, not a restriction; preserve accessible text sizing. */
+#studioWizard.sw-stage-format #swChoices .sw-format-use-note{
+  font-size:15px!important;
+  line-height:1.6!important;
+}
+</style>
+
+<style id="baro-v68-binding-zero-motion-final">
+/* Binding step only: no visual or geometric response to pointer hover.
+   Selection border remains the sole state indicator; keyboard focus remains visible.
+   Defined last to override older v313/v320 and stage2 rules. */
+#studioWizard.sw-binding-step .sw-gallery-item .sw-card.sw-gallery-photo,
+#studioWizard.sw-binding-step .sw-gallery-item .sw-card.sw-gallery-photo:hover:not(:disabled),
+#studioWizard.sw-binding-step .sw-gallery-item .sw-card.sw-gallery-photo:active {
+  box-sizing:border-box!important;
+  border-width:2px!important;
+  border-style:solid!important;
+  border-color:transparent!important;
+  padding:0!important;
+  transform:none!important;
+  translate:none!important;
+  scale:none!important;
+  filter:none!important;
+  box-shadow:none!important;
+  transition:none!important;
+  animation:none!important;
+}
+#studioWizard.sw-binding-step .sw-gallery-item .sw-card.sw-gallery-photo.selected,
+#studioWizard.sw-binding-step .sw-gallery-item .sw-card.sw-gallery-photo.selected:hover:not(:disabled),
+#studioWizard.sw-binding-step .sw-gallery-item .sw-card.sw-gallery-photo.selected:active {
+  border-color:#4B4F8F!important;
+}
+#studioWizard.sw-binding-step .sw-gallery-item .sw-card.sw-gallery-photo .sw-visual.sw-photo-v10,
+#studioWizard.sw-binding-step .sw-gallery-item .sw-card.sw-gallery-photo .sw-visual.sw-photo-v10 img,
+#studioWizard.sw-binding-step .sw-gallery-item .sw-card.sw-gallery-photo:hover .sw-visual.sw-photo-v10,
+#studioWizard.sw-binding-step .sw-gallery-item .sw-card.sw-gallery-photo:hover .sw-visual.sw-photo-v10 img {
+  transform:none!important;
+  translate:none!important;
+  scale:none!important;
+  filter:none!important;
+  transition:none!important;
+  animation:none!important;
+}
+/* Keep the keyboard indicator as an accessible non-layout-changing outline. */
+#studioWizard.sw-binding-step .sw-gallery-item .sw-card.sw-gallery-photo:focus-visible {
+  outline:3px solid #4B4F8F!important;
+  outline-offset:3px!important;
 }
 </style>
